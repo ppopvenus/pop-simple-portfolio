@@ -4,7 +4,7 @@ A simple and elegant personal portfolio website template.
 
 ## Project Structure
 
-The core project files are located in the `pop-venus-portfolio` directory:
+The core project files are located in the `docs` directory:
 
 - `index.html`: The main structure of the portfolio.
 - `style.css`: The styling and layout definitions.
@@ -24,7 +24,7 @@ The core project files are located in the `pop-venus-portfolio` directory:
    ```
 2. Navigate to the project folder:
    ```bash
-   cd pop-simple-portfolio/pop-venus-portfolio
+   cd pop-simple-portfolio/docs
    ```
 3. Open `index.html` in your favorite web browser to view the portfolio.
 
