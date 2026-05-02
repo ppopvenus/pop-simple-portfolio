@@ -2,6 +2,8 @@
 
 A simple and elegant personal portfolio website template.
 
+**[Live Demo](https://ppopvenus.github.io/pop-simple-portfolio/)**
+
 ## Project Structure
 
 The core project files are located in the `docs` directory:
