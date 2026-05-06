@@ -325,6 +325,126 @@ h2::after {
 }
 
 /* Footer */
+.cta-btns {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.cta-button.secondary {
+    background-color: transparent;
+    color: var(--accent-color);
+    border: 2px solid var(--accent-color);
+}
+
+.cta-button.secondary:hover {
+    background-color: var(--accent-color);
+    color: #121212;
+}
+
+.nav-btn {
+    background: var(--accent-color);
+    color: #121212;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    font-family: inherit;
+    font-weight: bold;
+    font-size: 0.8rem;
+    cursor: pointer;
+    margin-left: 1rem;
+    transition: transform 0.2s;
+}
+
+.nav-btn:hover {
+    transform: scale(1.05);
+}
+
+/* CV Template Styles (for PDF generation) */
+.cv-container {
+    padding: 40px;
+    font-family: "Latin Modern Roman", serif;
+    color: #000;
+    background: #fff;
+    line-height: 1.5;
+}
+
+.cv-header {
+    text-align: center;
+    border-bottom: 2px solid #000;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
+
+.cv-header h1 {
+    font-size: 28px;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.cv-header p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.cv-section {
+    margin-bottom: 25px;
+}
+
+.cv-section h2 {
+    font-size: 18px;
+    border-bottom: 1px solid #000;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    color: #000;
+    text-align: left;
+}
+
+.cv-section h2::after {
+    display: none;
+}
+
+.cv-item {
+    margin-bottom: 15px;
+}
+
+.cv-item-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+}
+
+.cv-item-subheader {
+    font-style: italic;
+    margin-bottom: 5px;
+}
+
+.cv-content {
+    font-size: 13px;
+    text-align: justify;
+}
+
+.cv-skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.cv-skill-cat h3 {
+    font-size: 14px;
+    margin-bottom: 5px;
+    text-decoration: underline;
+}
+
+.cv-skill-cat ul {
+    list-style: disc;
+    padding-left: 15px;
+    font-size: 12px;
+}
+
 footer {
     text-align: center;
     padding: 4rem 0;
