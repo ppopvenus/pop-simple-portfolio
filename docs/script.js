@@ -1,11 +1,16 @@
 const toggleButton = document.getElementById('theme-toggle');
 
 toggleButton.addEventListener('click', () => {
-    const currentTheme = document.documentElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    const newTheme = isLight ? 'dark' : 'light';
     
-    document.documentElement.setAttribute('data-theme', newTheme);
-    toggleButton.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+    if (newTheme === 'dark') {
+        document.documentElement.removeAttribute('data-theme');
+        toggleButton.textContent = '🌙';
+    } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        toggleButton.textContent = '☀️';
+    }
 });
 
 // PDF CV Generation Logic
