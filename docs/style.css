@@ -1,21 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
 :root {
-    --bg-color: #f5f5f5;
-    --text-color: #121212;
-    --accent-color: #6200ee;
+    --bg-color: #fdfaf7; /* Off-white earth tone */
+    --text-color: #3e2723; /* Deep brown text */
+    --accent-color: #8d6e63; /* Earth-tone brown */
     --card-bg: #ffffff;
-    --border-color: #ddd;
-    --nav-bg: rgba(245, 245, 245, 0.95);
+    --border-color: #d7ccc8;
+    --nav-bg: rgba(253, 250, 247, 0.95);
 }
 
 [data-theme='dark'] {
-    --bg-color: #121212;
-    --text-color: #e0e0e0;
-    --accent-color: #bb86fc;
-    --card-bg: #1e1e1e;
-    --border-color: #333;
-    --nav-bg: rgba(18, 18, 18, 0.95);
+    --bg-color: #1b1614; /* Dark earth tone */
+    --text-color: #efebe9;
+    --accent-color: #bcaaa4; /* Lighter earth-tone brown */
+    --card-bg: #2d2421;
+    --border-color: #4e342e;
+    --nav-bg: rgba(27, 22, 20, 0.95);
 }
 
 * {
@@ -26,7 +26,7 @@
 body {
     background-color: var(--bg-color);
     color: var(--text-color);
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Inter', sans-serif;
     margin: 0;
     padding: 0;
     line-height: 1.6;
