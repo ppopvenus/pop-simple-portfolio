@@ -1,4 +1,6 @@
 const toggleButton = document.getElementById('theme-toggle');
+// ดึง Tag <i> ที่อยู่ในปุ่มออกมาเพื่อเปลี่ยนรูป icon
+const themeIcon = toggleButton.querySelector('i');
 
 toggleButton.addEventListener('click', () => {
     const isLight = document.documentElement.getAttribute('data-theme') === 'light';
@@ -6,11 +8,14 @@ toggleButton.addEventListener('click', () => {
     
     if (newTheme === 'dark') {
         document.documentElement.removeAttribute('data-theme');
-        toggleButton.textContent = '🌙';
+        // เปลี่ยน Class เป็นพระจันทร์ (Font Awesome)
+        themeIcon.className = 'fa-solid fa-moon';
     } else {
         document.documentElement.setAttribute('data-theme', 'light');
-        toggleButton.textContent = '☀️';
+        // เปลี่ยน Class เป็นพระอาทิตย์ (Font Awesome)
+        themeIcon.className = 'fa-solid fa-sun';
     }
+});
 });
 
 // PDF CV Generation Logic
