@@ -156,17 +156,30 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        try {
-            const template = document.getElementById('cv-template');
-            if (!template) {
-                console.error("CV template (#cv-template) not found in DOM.");
-                alert("CV Template not found!");
-                isGenerating = false;
-                return;
-            }
+        const container = document.getElementById('cv-offscreen-container');
+        const template = document.getElementById('cv-template');
+        
+        if (!container || !template) {
+            console.error("CV template components not found in DOM.");
+            alert("CV Template not found!");
+            isGenerating = false;
+            return;
+        }
 
-            // Sync data to the off-screen template
+        try {
+            // Sync data to the template
             syncPortfolioToCV(template);
+
+            // Temporarily show the container but keep it hidden from view
+            Object.assign(container.style, {
+                display: 'block',
+                position: 'fixed',
+                top: '0',
+                left: '0',
+                width: '210mm',
+                zIndex: '-1000',
+                backgroundColor: 'white'
+            });
 
             const opt = {
                 margin: [10, 10, 10, 10],
@@ -176,23 +189,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     scale: 2, 
                     useCORS: true, 
                     letterRendering: true,
-                    logging: false
+                    logging: false,
+                    scrollX: 0,
+                    scrollY: 0
                 },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
                 pagebreak: { mode: 'css' }
             };
 
-            // Generate PDF directly from the off-screen template
+            // Generate PDF from the visible-but-hidden template
             html2pdf().set(opt).from(template).save().then(() => {
                 console.log("PDF generated and saved successfully.");
+                container.style.display = 'none'; // Hide it again
                 isGenerating = false;
             }).catch(err => {
                 console.error("PDF generation failed:", err);
+                container.style.display = 'none';
                 alert("An error occurred while generating the PDF.");
                 isGenerating = false;
             });
         } catch (error) {
             console.error("Critical failure during PDF generation:", error);
+            container.style.display = 'none';
             alert("Failed to prepare CV for download.");
             isGenerating = false;
         }
