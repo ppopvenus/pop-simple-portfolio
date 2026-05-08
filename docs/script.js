@@ -84,8 +84,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Sync Projects
             const projectGrid = document.querySelector('.project-grid');
+            
             const cvProjects = container.querySelector('#cv-projects');
             if (projectGrid && cvProjects) {
+                cvProjects.style.pageBreakBefore = 'always';
                 cvProjects.innerHTML = '';
                 projectGrid.querySelectorAll('.project-card').forEach(card => {
                     const title = card.querySelector('.project-info h3')?.textContent || '';
@@ -136,45 +138,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    let isGenerating = false;
+
     function generatePDF() {
+        if (isGenerating) {
+            console.log("PDF generation already in progress...");
+            return;
+        }
+
         console.log("Starting PDF generation process...");
+        isGenerating = true;
         
         if (typeof html2pdf === 'undefined') {
             console.error("html2pdf library is not loaded.");
             alert("Sorry, the PDF generation library failed to load. Please try again later.");
+            isGenerating = false;
             return;
         }
 
         try {
-            const originalTemplate = document.getElementById('cv-template');
-            if (!originalTemplate) {
-                console.error("Original CV template (#cv-template) not found in DOM.");
+            const template = document.getElementById('cv-template');
+            if (!template) {
+                console.error("CV template (#cv-template) not found in DOM.");
                 alert("CV Template not found!");
+                isGenerating = false;
                 return;
             }
 
-            // 1. Clone the template
-            const clone = originalTemplate.cloneNode(true);
-            clone.id = 'cv-clone-' + Date.now();
-            
-            // 2. Make the clone layout-able but off-screen
-            Object.assign(clone.style, {
-                display: 'block',
-                visibility: 'visible',
-                position: 'fixed',
-                left: '-9999px',
-                top: '0',
-                width: '210mm',
-                backgroundColor: 'white',
-                color: 'black',
-                zIndex: '-1000'
-            });
-
-            // 3. Append to body so sync can find elements if needed (though we use querySelector on container)
-            document.body.appendChild(clone);
-
-            // 4. Sync data directly into the clone
-            syncPortfolioToCV(clone);
+            // Sync data to the off-screen template
+            syncPortfolioToCV(template);
 
             const opt = {
                 margin: [10, 10, 10, 10],
@@ -186,22 +178,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     letterRendering: true,
                     logging: false
                 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak: { mode: 'css' }
             };
 
-            // 5. Generate PDF from the CLONE
-            html2pdf().set(opt).from(clone).save().then(() => {
-                // 6. Cleanup
-                document.body.removeChild(clone);
+            // Generate PDF directly from the off-screen template
+            html2pdf().set(opt).from(template).save().then(() => {
                 console.log("PDF generated and saved successfully.");
+                isGenerating = false;
             }).catch(err => {
                 console.error("PDF generation failed:", err);
-                if (clone.parentNode) document.body.removeChild(clone);
                 alert("An error occurred while generating the PDF.");
+                isGenerating = false;
             });
         } catch (error) {
             console.error("Critical failure during PDF generation:", error);
             alert("Failed to prepare CV for download.");
+            isGenerating = false;
         }
     }
 
