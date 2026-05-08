@@ -16,7 +16,6 @@ toggleButton.addEventListener('click', () => {
         themeIcon.className = 'fa-solid fa-sun';
     }
 });
-});
 
 // PDF CV Generation Logic
 const downloadButtons = [
@@ -112,22 +111,45 @@ function syncPortfolioToCV() {
 }
 
 function generatePDF() {
-    syncPortfolioToCV();
+    console.log("Attempting to generate CV PDF...");
     
-    const element = document.getElementById('cv-template');
-    element.style.display = 'block'; // Temporarily show for capture
-    
-    const opt = {
-        margin: [10, 10, 10, 10],
-        filename: 'Winassarin_Choudchum_CV.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, letterRendering: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
+    if (typeof html2pdf === 'undefined') {
+        console.error("html2pdf library is not loaded.");
+        alert("Sorry, the PDF generation library failed to load. Please try again later or contact me directly.");
+        return;
+    }
 
-    html2pdf().set(opt).from(element).save().then(() => {
-        element.style.display = 'none'; // Hide again
-    });
+    try {
+        syncPortfolioToCV();
+        
+        const element = document.getElementById('cv-template');
+        element.style.display = 'block'; // Temporarily show for capture
+        
+        const opt = {
+            margin: [10, 10, 10, 10],
+            filename: 'Winassarin_Choudchum_CV.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { 
+                scale: 2, 
+                useCORS: true, 
+                letterRendering: true,
+                logging: false
+            },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opt).from(element).save().then(() => {
+            element.style.display = 'none'; // Hide again
+            console.log("PDF generated successfully.");
+        }).catch(err => {
+            console.error("PDF generation failed:", err);
+            element.style.display = 'none';
+            alert("An error occurred while generating the PDF. Please try a different browser or contact me.");
+        });
+    } catch (error) {
+        console.error("Preparation for PDF failed:", error);
+        alert("Failed to prepare CV for download. Error: " + error.message);
+    }
 }
 
 downloadButtons.forEach(btn => {
