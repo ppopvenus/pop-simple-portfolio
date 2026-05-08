@@ -27,15 +27,24 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('download-cv-cta')
     ];
 
-    function syncPortfolioToCV() {
+    /**
+     * Synchronizes portfolio data into the CV template.
+     * @param {HTMLElement} container The CV template element (can be a clone).
+     */
+    function syncPortfolioToCV(container) {
+        console.log("Syncing portfolio data to CV...");
         try {
             // Sync About Me
-            const aboutText = document.querySelector('#about p');
-            if (aboutText) document.getElementById('cv-about').textContent = aboutText.textContent;
+            const aboutText = document.querySelector('#about .about-content p') || document.querySelector('#about p');
+            const cvAbout = container.querySelector('#cv-about');
+            if (aboutText && cvAbout) {
+                cvAbout.textContent = aboutText.textContent;
+                console.log("Synced About Me");
+            }
 
             // Sync Experience
             const experienceList = document.querySelector('.experience-list');
-            const cvExperience = document.getElementById('cv-experience');
+            const cvExperience = container.querySelector('#cv-experience');
             if (experienceList && cvExperience) {
                 cvExperience.innerHTML = '';
                 experienceList.querySelectorAll('.experience-card').forEach(card => {
@@ -53,11 +62,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     `;
                     cvExperience.appendChild(item);
                 });
+                console.log("Synced Experience");
             }
 
             // Sync Skills
             const skillsGrid = document.querySelector('.skills-grid');
-            const cvSkills = document.getElementById('cv-skills');
+            const cvSkills = container.querySelector('#cv-skills');
             if (skillsGrid && cvSkills) {
                 cvSkills.innerHTML = '';
                 skillsGrid.querySelectorAll('.skill-category').forEach(cat => {
@@ -69,11 +79,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     div.innerHTML = `<h3>${title}</h3><ul>${list}</ul>`;
                     cvSkills.appendChild(div);
                 });
+                console.log("Synced Skills");
             }
 
             // Sync Projects
             const projectGrid = document.querySelector('.project-grid');
-            const cvProjects = document.getElementById('cv-projects');
+            const cvProjects = container.querySelector('#cv-projects');
             if (projectGrid && cvProjects) {
                 cvProjects.innerHTML = '';
                 projectGrid.querySelectorAll('.project-card').forEach(card => {
@@ -92,11 +103,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     `;
                     cvProjects.appendChild(item);
                 });
+                console.log("Synced Projects");
             }
 
             // Sync Education
             const educationGrid = document.querySelector('.education-grid');
-            const cvEducation = document.getElementById('cv-education');
+            const cvEducation = container.querySelector('#cv-education');
             if (educationGrid && cvEducation) {
                 cvEducation.innerHTML = '';
                 educationGrid.querySelectorAll('.education-block').forEach(block => {
@@ -116,6 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     cvEducation.appendChild(div);
                 });
+                console.log("Synced Education");
             }
         } catch (e) {
             console.error("Error during sync:", e);
@@ -124,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function generatePDF() {
-        console.log("Attempting to generate CV PDF...");
+        console.log("Starting PDF generation process...");
         
         if (typeof html2pdf === 'undefined') {
             console.error("html2pdf library is not loaded.");
@@ -133,30 +146,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            // 1. Sync data to the ORIGINAL hidden template
-            syncPortfolioToCV();
-            
             const originalTemplate = document.getElementById('cv-template');
             if (!originalTemplate) {
+                console.error("Original CV template (#cv-template) not found in DOM.");
                 alert("CV Template not found!");
                 return;
             }
 
-            // 2. Clone the synced template
+            // 1. Clone the template
             const clone = originalTemplate.cloneNode(true);
+            clone.id = 'cv-clone-' + Date.now();
             
-            // 3. Make the clone visible for capture but off-screen
+            // 2. Make the clone layout-able but off-screen
             Object.assign(clone.style, {
                 display: 'block',
+                visibility: 'visible',
                 position: 'fixed',
                 left: '-9999px',
                 top: '0',
-                width: '210mm', // Standard A4 width
+                width: '210mm',
                 backgroundColor: 'white',
+                color: 'black',
                 zIndex: '-1000'
             });
 
+            // 3. Append to body so sync can find elements if needed (though we use querySelector on container)
             document.body.appendChild(clone);
+
+            // 4. Sync data directly into the clone
+            syncPortfolioToCV(clone);
 
             const opt = {
                 margin: [10, 10, 10, 10],
@@ -171,23 +189,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
-            // 4. Generate PDF from the CLONE
+            // 5. Generate PDF from the CLONE
             html2pdf().set(opt).from(clone).save().then(() => {
-                // 5. Cleanup the clone
+                // 6. Cleanup
                 document.body.removeChild(clone);
-                console.log("PDF generated successfully.");
+                console.log("PDF generated and saved successfully.");
             }).catch(err => {
                 console.error("PDF generation failed:", err);
                 if (clone.parentNode) document.body.removeChild(clone);
                 alert("An error occurred while generating the PDF.");
             });
         } catch (error) {
-            console.error("Preparation for PDF failed:", error);
+            console.error("Critical failure during PDF generation:", error);
             alert("Failed to prepare CV for download.");
         }
     }
 
     downloadButtons.forEach(btn => {
-        if (btn) btn.addEventListener('click', generatePDF);
+        if (btn) {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                generatePDF();
+            });
+        }
     });
 });
