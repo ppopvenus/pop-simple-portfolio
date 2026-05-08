@@ -133,13 +133,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
+            // 1. Sync data to the ORIGINAL hidden template
             syncPortfolioToCV();
             
-            const element = document.getElementById('cv-template');
-            if (!element) {
+            const originalTemplate = document.getElementById('cv-template');
+            if (!originalTemplate) {
                 alert("CV Template not found!");
                 return;
             }
+
+            // 2. Clone the synced template
+            const clone = originalTemplate.cloneNode(true);
+            
+            // 3. Make the clone visible for capture but off-screen
+            Object.assign(clone.style, {
+                display: 'block',
+                position: 'fixed',
+                left: '-9999px',
+                top: '0',
+                width: '210mm', // Standard A4 width
+                backgroundColor: 'white',
+                zIndex: '-1000'
+            });
+
+            document.body.appendChild(clone);
 
             const opt = {
                 margin: [10, 10, 10, 10],
@@ -154,10 +171,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
-            html2pdf().set(opt).from(element).save().then(() => {
+            // 4. Generate PDF from the CLONE
+            html2pdf().set(opt).from(clone).save().then(() => {
+                // 5. Cleanup the clone
+                document.body.removeChild(clone);
                 console.log("PDF generated successfully.");
             }).catch(err => {
                 console.error("PDF generation failed:", err);
+                if (clone.parentNode) document.body.removeChild(clone);
                 alert("An error occurred while generating the PDF.");
             });
         } catch (error) {
