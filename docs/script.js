@@ -59,8 +59,51 @@ function syncPortfolioToCV() {
         cvSkills.appendChild(div);
     });
 
+    // Sync Projects
+    const projectGrid = document.querySelector('.project-grid');
+    const cvProjects = document.getElementById('cv-projects');
+    cvProjects.innerHTML = '';
+
+    projectGrid.querySelectorAll('.project-card').forEach(card => {
+        const title = card.querySelector('.project-info h3').textContent;
+        const description = card.querySelector('.project-info p:not(.achievement)').textContent;
+        const achievement = card.querySelector('.achievement').textContent;
+
+        const item = document.createElement('div');
+        item.className = 'cv-item';
+        item.innerHTML = `
+            <div class="cv-item-subheader" style="font-weight: bold;">${title}</div>
+            <div class="cv-content">
+                <p>${description}</p>
+                <p><strong>Impact:</strong> ${achievement}</p>
+            </div>
+        `;
+        cvProjects.appendChild(item);
+    });
+
     // Sync Education
-    document.getElementById('cv-education').innerHTML = document.querySelector('.education-item').innerHTML;
+    const educationGrid = document.querySelector('.education-grid');
+    const cvEducation = document.getElementById('cv-education');
+    cvEducation.innerHTML = '';
+    
+    educationGrid.querySelectorAll('.education-block').forEach(block => {
+        const title = block.querySelector('h3').textContent;
+        const itemContent = block.querySelector('.education-item').innerHTML;
+        
+        const div = document.createElement('div');
+        div.className = 'cv-item';
+        div.style.marginBottom = '15px';
+        div.innerHTML = `
+            <div class="cv-item-subheader" style="font-weight: bold; margin-bottom: 5px;">${title}</div>
+            <div class="cv-content">${itemContent}</div>
+        `;
+        
+        // Remove iframes from the cloned content
+        const iframes = div.querySelectorAll('iframe');
+        iframes.forEach(f => f.remove());
+        
+        cvEducation.appendChild(div);
+    });
 }
 
 function generatePDF() {
