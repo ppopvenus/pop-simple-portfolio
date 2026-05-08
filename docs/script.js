@@ -141,8 +141,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            element.style.display = 'block'; 
-            
             const opt = {
                 margin: [10, 10, 10, 10],
                 filename: 'Winassarin_Choudchum_CV.pdf',
@@ -157,11 +155,9 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             html2pdf().set(opt).from(element).save().then(() => {
-                element.style.display = 'none'; 
                 console.log("PDF generated successfully.");
             }).catch(err => {
                 console.error("PDF generation failed:", err);
-                element.style.display = 'none';
                 alert("An error occurred while generating the PDF.");
             });
         } catch (error) {
