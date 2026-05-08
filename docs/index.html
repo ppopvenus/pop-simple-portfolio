@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/latin-modern-roman@5.0.1/index.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -20,7 +19,7 @@
                     <a href="#projects">Projects</a>
                     <a href="#education">Education</a>
                     <a href="#cta">Contact</a>
-                    <button id="download-cv-nav" class="nav-btn"><i class="fas fa-file-pdf"></i> CV</button>
+                    <a href="Winassarin_Choudchum_CV.pdf" download id="download-cv-nav" class="nav-btn" style="text-decoration: none; display: inline-flex; align-items: center; gap: 5px;"><i class="fas fa-file-pdf"></i> CV</a>
                 </div>
                 <div class="theme-toggle-container">
                     <button id="theme-toggle"><i class="fa-solid fa-moon"></i></button>
@@ -212,44 +211,6 @@
             </div>
             <p>&copy; 2026 Winassarin Choudchum.</p>
         </footer>
-    </div>
-
-    <!-- Hidden CV Template for PDF Generation -->
-    <div id="cv-offscreen-container" style="display: none;">
-        <div id="cv-template" style="background: white; color: black;">
-            <div class="cv-container">
-                <div class="cv-header">
-                    <h1>Winassarin Choudchum</h1>
-                    <p>HR Data Analytics Specialist</p>
-                    <p>ppopvenus@gmail.com | github.com/ppopvenus | linkedin.com/in/pop-venus-40b618408</p>
-                </div>
-                
-                <div class="cv-section">
-                    <h2>Professional Summary</h2>
-                    <div class="cv-content" id="cv-about"></div>
-                </div>
-
-                <div class="cv-section">
-                    <h2>Experience</h2>
-                    <div id="cv-experience"></div>
-                </div>
-
-                <div class="cv-section">
-                    <h2>Skills</h2>
-                    <div id="cv-skills" class="cv-skills-grid"></div>
-                </div>
-
-                <div class="cv-section">
-                    <h2>Featured Projects</h2>
-                    <div id="cv-projects"></div>
-                </div>
-
-                <div class="cv-section">
-                    <h2>Education & Certifications</h2>
-                    <div id="cv-education"></div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script src="script.js"></script>
